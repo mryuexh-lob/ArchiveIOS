@@ -124,7 +124,8 @@ struct ArchiveDetailView: View {
             busy = true
             do {
                 try await APIClient.shared.reviewArchive(id: taskId, action: reviewAction, comment: reviewComment)
-                await MainActor.run { showReview = false; reviewComment = ""; load() }
+                await MainActor.run { showReview = false; reviewComment = "" }
+                await load()
             } catch {
                 await MainActor.run { message = error.localizedDescription; showError = true }
             }
@@ -141,7 +142,8 @@ struct ArchiveDetailView: View {
                                                           comment: archiveComment,
                                                           archiveNo: archiveNo,
                                                           archiveLocation: archiveLocation)
-                await MainActor.run { showArchive = false; archiveComment = ""; archiveNo = ""; archiveLocation = ""; load() }
+                await MainActor.run { showArchive = false; archiveComment = ""; archiveNo = ""; archiveLocation = "" }
+                await load()
             } catch {
                 await MainActor.run { message = error.localizedDescription; showError = true }
             }
