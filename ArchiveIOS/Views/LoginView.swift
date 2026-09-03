@@ -120,17 +120,18 @@ struct LoginView: View {
                 keyboardHeight = 0
             }
             .onAppear { if !privacyAccepted { showPrivacy = true } }
-            .alert("隐私政策", isPresented: $showPrivacy) {
+            .alert("隐私政策与用户协议", isPresented: $showPrivacy) {
                 Button("同意并继续") {
                     privacyAccepted = true
                     UserDefaults.standard.set(true, forKey: "privacy_accepted")
                     showPrivacy = false
                 }
-                Button("不同意并退出", role: .destructive) {
-                    exit(0)
+                Button("不同意", role: .cancel) {
+                    // 不退出，仅关闭弹窗（与安卓端一致）
+                    showPrivacy = false
                 }
             } message: {
-                Text("本应用为 EPRI 075-2021 移动应用安全测试被测样品，会收集账号、口令、手机号、身份证号等个人信息用于测试。点击\"同意\"代表你已知悉并授权在测试环境中使用上述信息。")
+                Text("欢迎使用资料归档助手！\n\n为保障归档业务的正常开展，本应用会收集并使用以下信息：\n· 账号与口令：用于身份鉴别\n· 姓名、部门、手机号、身份证号：用于归档责任追溯\n· 设备型号与系统版本：用于兼容性适配\n\n请仔细阅读并同意《隐私政策》后继续使用。")
             }
         }
     }
