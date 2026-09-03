@@ -1,9 +1,10 @@
-# Codemagic 云构建 · 仅出“未签名 IPA”，不碰任何苹果签名
+# Codemagic 云构建 · 仅出"未签名 IPA"，不碰任何苹果签名
 # 配合 Windows 端 Sideloadly + 免费 Apple ID 侧载进自己的 iPhone
 # 全程无需 $99 付费账号、无需证书/描述文件、无需任何 Apple Secret
 #
-# 本仓库把源码放在 ArchiveIOS/ 子目录下（与上一版 github-upload 同构），
-# 因此“生成工程 / 归档 / 打包”三个步骤开头都要 cd ArchiveIOS 才能找到 project.yml。
+# 仓库结构：project.yml / codemagic.yaml / Info.plist 在根目录，
+# Swift 源码在 ArchiveIOS/ 子目录（由 project.yml 的 sources: path: ArchiveIOS 引用）。
+# xcodegen 从根目录生成 .xcodeproj，后续归档/打包均在根目录执行。
 workflows:
   ios-ipa-free:
     name: Build unsigned IPA (Sideloadly)
@@ -19,12 +20,10 @@ workflows:
         script: brew install xcodegen
       - name: Generate Xcode project
         script: |
-          cd ArchiveIOS
           xcodegen generate
       - name: Archive (unsigned, no paid cert)
         script: |
           set -e
-          cd ArchiveIOS
           xcodebuild -project "$XCODE_PROJECT" -scheme "$XCODE_SCHEME" \
             -configuration Release \
             -archivePath build/ArchiveIOS.xcarchive \
@@ -38,7 +37,6 @@ workflows:
       - name: Package IPA (Payload)
         script: |
           set -e
-          cd ArchiveIOS
           APP=$(find build/ArchiveIOS.xcarchive/Products/Applications -name "*.app" -maxdepth 1 | head -1)
           echo "App path: $APP"
           if [ -z "$APP" ]; then echo "ERROR: .app not found"; exit 1; fi
@@ -49,7 +47,7 @@ workflows:
           zip -r ArchiveIOS.ipa Payload
           ls -la ArchiveIOS.ipa
     artifacts:
-      - ArchiveIOS/build/ipa/ArchiveIOS.ipa
+      - build/ipa/ArchiveIOS.ipa
     publishing:
       email:
         recipients:
