@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AboutView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode
     @State private var latest: AppVersion?
     @State private var checking = false
     @State private var showUpdateInfo = false
@@ -44,7 +44,7 @@ struct AboutView: View {
             }
             .padding(.top, 30)
             .navigationTitle("关于")
-            .navigationBarItems(trailing: Button("关闭") { dismiss() })
+            .navigationBarItems(trailing: Button("关闭") { presentationMode.wrappedValue.dismiss() })
             .alert("发现新版本", isPresented: $showUpdateInfo) {
                 Button("确定") { }
             } message: { Text(updateText()) }

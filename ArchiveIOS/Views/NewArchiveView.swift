@@ -2,7 +2,7 @@ import SwiftUI
 
 struct NewArchiveView: View {
     let onCreated: () -> Void
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode
     @State private var title = ""
     @State private var docName = ""
     @State private var docType = "合同文书"
@@ -47,7 +47,7 @@ struct NewArchiveView: View {
                 }
             }
             .navigationTitle("新建归档工单")
-            .navigationBarItems(leading: Button("取消") { dismiss() },
+            .navigationBarItems(leading: Button("取消") { presentationMode.wrappedValue.dismiss() },
                                 trailing: Button("保存") { submit() })
             .onAppear { Task { await loadReviewers() } }
             .alert(isPresented: $showError) {
@@ -82,7 +82,7 @@ struct NewArchiveView: View {
                     "reviewerId": rid
                 ]
                 try await APIClient.shared.createArchive(fields)
-                await MainActor.run { dismiss(); onCreated() }
+                await MainActor.run { presentationMode.wrappedValue.dismiss(); onCreated() }
             } catch {
                 await MainActor.run { errorMsg = error.localizedDescription; showError = true; busy = false }
             }

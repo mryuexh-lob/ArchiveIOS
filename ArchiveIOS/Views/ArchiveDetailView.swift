@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ArchiveDetailView: View {
     let taskId: Int
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode
     @State private var task: ArchiveTask?
     @State private var busy = false
     @State private var message: String?
@@ -113,7 +113,7 @@ struct ArchiveDetailView: View {
 
     func doDelete() async {
         busy = true
-        do { try await APIClient.shared.deleteArchive(id: taskId); await MainActor.run { dismiss() } }
+        do { try await APIClient.shared.deleteArchive(id: taskId); await MainActor.run { presentationMode.wrappedValue.dismiss() } }
         catch { message = error.localizedDescription; showError = true }
         busy = false
     }
