@@ -76,6 +76,7 @@ struct LoginView: View {
                         .padding(14)
                         .background(Color.primaryColor)
                         .cornerRadius(10)
+                        .contentShape(Rectangle())
                         .padding(.horizontal, 24)
                         .disabled(busy)
 
