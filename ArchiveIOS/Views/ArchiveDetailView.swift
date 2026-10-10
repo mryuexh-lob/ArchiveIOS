@@ -77,7 +77,7 @@ struct ArchiveDetailView: View {
                         }
                         // 撤回：申请人 + 待审核
                         if task.status == "待审核", TokenManager.userId == task.applicantId {
-                            Button(role: .destructive) {
+                            Button {
                                 Task { await doDelete() }
                             } label: {
                                 Label("撤回工单", systemImage: "arrow.uturn.backward")

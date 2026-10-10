@@ -2,13 +2,13 @@ name: ArchiveIOS
 options:
   bundleIdPrefix: com.epri.archive
   deploymentTarget:
-    iOS: "15.0"
+    iOS: "14.0"
   createIntermediateGroups: true
 targets:
   ArchiveIOS:
     type: application
     platform: iOS
-    deploymentTarget: "15.0"
+    deploymentTarget: "14.0"
     sources:
       - path: ArchiveIOS
     settings:

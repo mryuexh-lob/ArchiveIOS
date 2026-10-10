@@ -53,7 +53,7 @@ struct ArchiveListView: View {
                 .padding(.horizontal, 12)
 
                 HStack {
-                    TextField("搜索工单号/标题", text: $keyword)
+                    TextField("搜索工单号/标题", text: $keyword, onCommit: { Task { await load() } })
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                     Button("筛选") { showFilter.toggle() }
                 }
@@ -99,7 +99,6 @@ struct ArchiveListView: View {
             .navigationBarItems(trailing: newButton)
             .onChange(of: statusFilter) { _ in Task { await load() } }
             .onChange(of: docType) { _ in Task { await load() } }
-            .onSubmit(of: .text) { Task { await load() } }
             .onAppear { Task { await load() } }
             .sheet(isPresented: $showNew) {
                 NewArchiveView(onCreated: { Task { await load() } })

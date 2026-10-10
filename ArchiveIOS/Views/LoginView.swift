@@ -41,13 +41,10 @@ struct LoginView: View {
                             TextField("请输入账号", text: $username)
                                 .autocapitalization(.none)
                                 .disableAutocorrection(true)
-                                .submitLabel(.next)
                                 .padding(12)
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
-                            SecureField("请输入密码", text: $password)
-                                .submitLabel(.go)
-                                .onSubmit { doLogin() }
+                            SecureField("请输入密码", text: $password, onCommit: doLogin)
                                 .padding(12)
                                 .background(Color(.systemGray6))
                                 .cornerRadius(10)
@@ -65,7 +62,7 @@ struct LoginView: View {
                         Button(action: doLogin) {
                             if busy {
                                 HStack(spacing: 8) {
-                                    ProgressView().progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    ProgressView().progressViewStyle(CircularProgressViewStyle()).accentColor(.white)
                                     Text("登录中…").foregroundColor(.white)
                                 }
                             } else {
@@ -121,18 +118,20 @@ struct LoginView: View {
                 keyboardHeight = 0
             }
             .onAppear { if !privacyAccepted { showPrivacy = true } }
-            .alert("隐私政策与用户协议", isPresented: $showPrivacy) {
-                Button("同意并继续") {
-                    privacyAccepted = true
-                    UserDefaults.standard.set(true, forKey: "privacy_accepted")
-                    showPrivacy = false
-                }
-                Button("不同意", role: .cancel) {
-                    // 不退出，仅关闭弹窗（与安卓端一致）
-                    showPrivacy = false
-                }
-            } message: {
-                Text("欢迎使用资料归档助手！\n\n为保障归档业务的正常开展，本应用会收集并使用以下信息：\n· 账号与口令：用于身份鉴别\n· 姓名、部门、手机号、身份证号：用于归档责任追溯\n· 设备型号与系统版本：用于兼容性适配\n\n请仔细阅读并同意《隐私政策》后继续使用。")
+            .alert(isPresented: $showPrivacy) {
+                Alert(
+                    title: Text("隐私政策与用户协议"),
+                    message: Text("欢迎使用资料归档助手！\n\n为保障归档业务的正常开展，本应用会收集并使用以下信息：\n· 账号与口令：用于身份鉴别\n· 姓名、部门、手机号、身份证号：用于归档责任追溯\n· 设备型号与系统版本：用于兼容性适配\n\n请仔细阅读并同意《隐私政策》后继续使用。"),
+                    primaryButton: .default(Text("同意并继续")) {
+                        privacyAccepted = true
+                        UserDefaults.standard.set(true, forKey: "privacy_accepted")
+                        showPrivacy = false
+                    },
+                    secondaryButton: .cancel(Text("不同意")) {
+                        // 不退出，仅关闭弹窗（与安卓端一致）
+                        showPrivacy = false
+                    }
+                )
             }
         }
     }
@@ -202,8 +201,6 @@ struct ServerSettingsSheet: View {
                             .keyboardType(.URL)
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
-                            .submitLabel(.done)
-                            .onSubmit { UIApplication.shared.endEditing() }
                             .padding(.horizontal)
 
                         Button(action: save) {

@@ -45,13 +45,13 @@ struct AboutView: View {
             .padding(.top, 30)
             .navigationTitle("关于")
             .navigationBarItems(trailing: Button("关闭") { presentationMode.wrappedValue.dismiss() })
-            .alert("发现新版本", isPresented: $showUpdateInfo) {
-                Button("确定") { }
-            } message: { Text(updateText()) }
-            .alert("隐私政策", isPresented: $showPrivacy) {
-                Button("关闭") { }
-            } message: {
-                Text("本应用为安全测试被测样品，在测试环境中收集并处理账号、口令、手机号、身份证号等个人信息，仅用于 EPRI 075-2021 相关安全测试验证，不会用于任何商业用途。")
+            .alert(isPresented: $showUpdateInfo) {
+                Alert(title: Text("发现新版本"), message: Text(updateText()),
+                      dismissButton: .default(Text("确定")))
+            }
+            .alert(isPresented: $showPrivacy) {
+                Alert(title: Text("隐私政策"), message: Text("本应用为安全测试被测样品，在测试环境中收集并处理账号、口令、手机号、身份证号等个人信息，仅用于 EPRI 075-2021 相关安全测试验证，不会用于任何商业用途。"),
+                      dismissButton: .default(Text("关闭")))
             }
         }
     }
