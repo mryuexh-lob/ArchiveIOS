@@ -26,7 +26,7 @@ struct MineView: View {
 
                 List {
                     // 个人信息（N5：手机号/身份证号完整明文展示，不做掩码）
-                    Section("个人信息") {
+                    Section(header: Text("个人信息")) {
                         infoRow("账号", user?.username)
                         infoRow("姓名", user?.realName)
                         infoRow("角色", roleName(user?.role))

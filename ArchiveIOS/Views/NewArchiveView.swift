@@ -26,7 +26,7 @@ struct NewArchiveView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section("基本信息") {
+                Section(header: Text("基本信息")) {
                     TextField("资料标题 *", text: $title)
                     TextField("资料名称", text: $docName)
                     Picker("资料类型", selection: $docType) { ForEach(docTypes, id: \.self) { Text($0) } }
@@ -37,7 +37,7 @@ struct NewArchiveView: View {
                     TextField("页数", text: $pageCount).keyboardType(.numberPad)
                     TextField("资料描述", text: $description)
                 }
-                Section("指定审核员") {
+                Section(header: Text("指定审核员")) {
                     Picker("审核员", selection: $reviewerId) {
                         Text("请选择").tag(Int?.none)
                         ForEach(reviewers) { rv in
